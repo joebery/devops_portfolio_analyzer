@@ -1,17 +1,17 @@
 # DevOps Portfolio Analyzer
 
-A cloud-native SaaS application that analyses GitHub repositories and uses AI to generate professional project summaries, DevOps maturity scores, README improvements, and CV-ready bullet points.
+A cloud-native SaaS application that analyses public GitHub repositories and uses AI to generate professional project summaries, DevOps maturity scores, README improvement suggestions, and CV-ready bullet points.
 
->**Currently in active development — this is iteration 1**
+> 🚧 **Active development — Day 1 complete**
 
 ---
 
 ## What This Project Is
 
-You paste a public GitHub URL. The app:
+Paste a public GitHub URL. The app:
 
-1. Fetches the repository metadata via the GitHub API
-2. Scans the repo structure for DevOps signals (Dockerfile, Terraform, GitHub Actions, Kubernetes manifests, etc.)
+1. Fetches repository metadata via the GitHub API
+2. Scans the repo structure for DevOps signals — Dockerfiles, Terraform, GitHub Actions workflows, Kubernetes manifests, and more
 3. Sends the findings to an AI model
 4. Returns:
    - A plain English project summary
@@ -42,29 +42,30 @@ Built to demonstrate real-world cloud engineering patterns — not a tutorial ap
 
 ## Current Status
 
-### ✅ Iteration 1 — Local Foundation
-- [x] Project structure created
-- [x] FastAPI backend running inside Docker
-- [x] Docker Compose local development environment
-- [x] `/` and `/health` endpoints responding
-- [x] Auto-generated API docs at `/docs`
-- [x] PostgreSQL database connected
-- [x] `repositories` table created
-- [x] `POST /api/v1/repos` endpoint accepting GitHub URLs
-- [x] URL validation
-- [x] Rows saving to PostgreSQL with UUID and status
-- [x] GitHub service fetching live repo metadata
-- [x] Repository file structure scanner
-- [x] `.gitignore` and `.env` protection set up
+### ✅ Day 1 — Local Foundation Complete
 
-### 🔲 Up Next
-- [ ] PostgreSQL database + Alembic migrations
-- [ ] `POST /api/v1/repos` endpoint
-- [ ] GitHub API integration
-- [ ] Repository file structure scanner
-- [ ] AWS SQS queue + async worker
-- [ ] OpenAI integration
-- [ ] Next.js frontend
+| # | Milestone | Status |
+|---|---|---|
+| 1 | Project structure and folder naming conventions | ✅ |
+| 2 | FastAPI backend running inside Docker | ✅ |
+| 3 | Docker Compose local development environment | ✅ |
+| 4 | Root and health check endpoints responding | ✅ |
+| 5 | Auto-generated API docs at `/docs` | ✅ |
+| 6 | PostgreSQL database connected via Docker Compose | ✅ |
+| 7 | `repositories` table created with UUID primary key | ✅ |
+| 8 | `POST /api/v1/repos` endpoint accepting and validating GitHub URLs | ✅ |
+| 9 | Submitted URLs saving to PostgreSQL with status tracking | ✅ |
+| 10 | GitHub service fetching live repo metadata | ✅ |
+| 11 | Repository file structure scanner detecting DevOps signals | ✅ |
+| 12 | `.gitignore` and `.env` protection configured | ✅ |
+
+### 🔲 Day 2 — Up Next
+
+- [ ] OpenAI integration — generate AI analysis from repo metadata
+- [ ] Async worker pattern — decouple analysis from API response
+- [ ] AWS SQS queue setup with LocalStack
+- [ ] `GET /api/v1/analyses/{job_id}` endpoint
+- [ ] Next.js frontend — submit form and results dashboard
 - [ ] AWS deployment via Terraform
 - [ ] GitHub Actions CI/CD pipeline
 
@@ -74,12 +75,22 @@ Built to demonstrate real-world cloud engineering patterns — not a tutorial ap
 
 ```
 devops_portfolio_analyzer/
-├── backend/
-│   ├── app/
-│   │   └── main.py          # FastAPI entry point
-│   ├── Dockerfile
-│   └── requirements.txt
-└── docker-compose.yml
+├── .env                          # Local secrets — never committed
+├── .gitignore
+├── docker-compose.yml
+├── README.md
+└── backend/
+    ├── app/
+    │   ├── main.py               # FastAPI entry point
+    │   ├── db.py                 # Database engine and session
+    │   ├── models.py             # SQLAlchemy ORM models
+    │   ├── schemas.py            # Pydantic request/response schemas
+    │   ├── routers/
+    │   │   └── repos.py          # /api/v1/repos endpoints
+    │   └── services/
+    │       └── github_service.py # GitHub API integration
+    ├── Dockerfile
+    └── requirements.txt
 ```
 
 ---
@@ -89,22 +100,76 @@ devops_portfolio_analyzer/
 ### Prerequisites
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- A GitHub Personal Access Token with `public_repo` scope
 
-### Start the backend
+### Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/devops_portfolio_analyzer.git
+git clone https://github.com/joebery/devops_portfolio_analyzer.git
 cd devops_portfolio_analyzer
+```
+
+Create a `.env` file in the root:
+
+```
+GITHUB_TOKEN=ghp_yourtoken
+DATABASE_URL=postgresql://dev:devpassword@db:5432/portfolio_analyzer
+```
+
+Start the stack:
+
+```bash
 docker compose up --build
 ```
 
 ### Endpoints
 
-| URL | Description |
-|---|---|
-| `http://localhost:8000` | Root — returns `{"message": "hello"}` |
-| `http://localhost:8000/health` | Health check |
-| `http://localhost:8000/docs` | Auto-generated API docs |
+| URL | Method | Description |
+|---|---|---|
+| `http://localhost:8000` | GET | Root check |
+| `http://localhost:8000/health` | GET | Health check — confirms DB connection |
+| `http://localhost:8000/docs` | GET | Auto-generated interactive API docs |
+| `http://localhost:8000/api/v1/repos` | POST | Submit a GitHub repo URL for analysis |
+| `http://localhost:8000/api/v1/repos/test-github/{owner}/{repo}` | GET | Test GitHub API integration directly |
+
+---
+
+## Example API Usage
+
+**Submit a repository:**
+
+```bash
+curl -X POST http://localhost:8000/api/v1/repos \
+  -H "Content-Type: application/json" \
+  -d '{"github_url": "https://github.com/torvalds/linux"}'
+```
+
+**Response:**
+
+```json
+{
+  "job_id": "62b809fd-bffa-41bb-9a57-507747672a08",
+  "github_url": "https://github.com/torvalds/linux",
+  "status": "pending"
+}
+```
+
+**Live GitHub scan result:**
+
+```json
+{
+  "stars": 232799,
+  "forks": 62201,
+  "primary_language": "C",
+  "description": "Linux kernel source tree",
+  "has_readme": true,
+  "has_dockerfile": false,
+  "has_terraform": false,
+  "has_github_actions": false,
+  "has_kubernetes": false,
+  "workflow_count": 0
+}
+```
 
 ---
 
@@ -113,50 +178,55 @@ docker compose up --build
 ```
 User submits GitHub URL
         ↓
-FastAPI backend receives request
+FastAPI validates and saves job (status: pending)
         ↓
-Job dropped onto SQS queue (async)
+Job dropped onto SQS queue
         ↓
 Background worker picks up job:
-  → Calls GitHub API
-  → Scans repo file tree
-  → Sends metadata to OpenAI
-  → Stores results in PostgreSQL + S3
+  → Calls GitHub API for metadata
+  → Scans repo file tree for DevOps signals
+  → Sends structured data to OpenAI
+  → Stores AI analysis in PostgreSQL + S3
         ↓
-Frontend polls for completion
+Frontend polls for job completion
         ↓
 Results dashboard rendered
 ```
 
-The API and worker are deliberately decoupled. The API responds instantly with a job ID. The slow work (GitHub + OpenAI calls) happens in the background. This is the correct pattern for operations that take 10–30 seconds.
+The API and worker are deliberately decoupled. The API responds instantly with a job ID — the slow work (GitHub + OpenAI calls) happens in the background. This prevents users waiting on a synchronous chain of external API calls.
 
 ---
 
-## Why This Architecture
+## Architectural Decisions
 
-This project is designed to resemble a junior-to-mid level real-world cloud engineering project, not a tutorial. Key decisions:
-
-- **Docker from day one** — consistent environments across local and production
-- **Async queue pattern** — users never wait on a synchronous chain of slow API calls
-- **SQS Dead Letter Queue** — failed jobs are preserved and replayable, not silently dropped
-- **S3 for raw storage** — keeps the database slim, full metadata always retrievable
-- **ECS Fargate** — no EC2 management, scales to zero when idle
-- **Secrets Manager** — no credentials ever in environment variables or code
-- **OIDC for CI/CD** — no long-lived AWS keys stored in GitHub
+| Decision | Reason |
+|---|---|
+| Docker from day one | Consistent environments across local dev and production |
+| Async queue pattern | Users never wait on slow external API calls |
+| SQS Dead Letter Queue | Failed jobs are preserved and replayable, not silently lost |
+| S3 for raw JSON storage | Keeps the database slim — full metadata always retrievable |
+| ECS Fargate | No EC2 management, scales to zero when idle |
+| UUID primary keys | Avoids sequential ID enumeration — better security posture |
+| Pydantic validation | Invalid URLs rejected before they touch the database or queue |
 
 ---
 
 ## Local Development Notes
 
 - Docker Desktop must be running before `docker compose up --build`
-- The `version` field has been removed from `docker-compose.yml` (obsolete in modern Docker)
-- Hot reload is enabled — code changes reflect without rebuilding the container
+- Hot reload is enabled — code changes reflect inside the container without rebuilding
+- The `version` field is omitted from `docker-compose.yml` — it is obsolete in modern Docker
+- Never commit the `.env` file — add it manually after cloning
 
 ---
 
 ## Author
 
-JOE BERY
+**Joe Bery** — Cybersecurity and Networks graduate transitioning into cloud and software engineering.
+
+Building this project to demonstrate real-world AWS, backend, and DevOps skills through a practical portfolio tool.
+
+[GitHub](https://github.com/joebery)
 
 ---
 
