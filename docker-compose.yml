@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: portfolio_analyzer
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: devpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app:/app/app
+    environment:
+      DATABASE_URL: postgresql://dev:devpassword@db:5432/portfolio_analyzer
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
