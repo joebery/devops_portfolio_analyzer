@@ -1,4 +1,4 @@
-# DevOps Portfolio Analyzer
+#Portfolio Analyzer
 
 ![Python](https://img.shields.io/badge/language-Python-blue.svg) ![License](https://img.shields.io/badge/license-MIT-green.svg) ![Docker](https://img.shields.io/badge/docker-enabled-blue.svg)
 
@@ -8,9 +8,8 @@ A cloud-native SaaS tool that analyzes GitHub repositories and uses AI to genera
 
 ## 🚀 What This Project Does
 
-The DevOps Portfolio Analyzer allows users to paste a public GitHub URL, which the app then analyzes by fetching repository metadata via the GitHub API, scanning the repo structure for DevOps signals, sending findings to an AI model, and returning:
+The Portfolio Analyzer allows users to paste a public GitHub URL, which the app then analyzes by fetching repository metadata via the GitHub API, scanning the repo structure for DevOps signals, sending findings to an AI model, and returning:
 - A plain English project summary
-- A DevOps maturity score
 - README improvement suggestions
 - CV-ready bullet points
 
@@ -38,7 +37,6 @@ Built to demonstrate real-world cloud engineering patterns — not a tutorial ap
 
 - 🚀 Quick GitHub repository analysis
 - 📊 AI-generated project summaries
-- 🔍 DevOps maturity scoring
 - 💡 README improvement suggestions
 
 ---
@@ -74,7 +72,7 @@ docker compose up --build
 
 ## 🔄 What Changed In This Update
 
-Recent updates include enhanced integration with OpenAI, which now generates project summaries and DevOps maturity scores from the analyzed repository metadata. The README has been improved for clarity and completeness, ensuring that new features are well-documented.
+Recent updates include enhanced integration with OpenAI, which now generates project summaries. The README has been improved for clarity and completeness, ensuring that new features are well-documented.
 
 ---
 
@@ -89,7 +87,6 @@ Job dropped onto SQS queue
         ↓
 Background worker picks up job:
   → Calls GitHub API for metadata
-  → Scans repo file tree for DevOps signals
   → Sends structured data to OpenAI
   → Stores AI analysis in PostgreSQL + S3
         ↓
