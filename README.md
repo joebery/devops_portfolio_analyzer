@@ -1,4 +1,4 @@
-#Portfolio Analyzer
+# DevOps Portfolio Analyzer
 
 ![Python](https://img.shields.io/badge/language-Python-blue.svg) ![License](https://img.shields.io/badge/license-MIT-green.svg) ![Docker](https://img.shields.io/badge/docker-enabled-blue.svg)
 
@@ -8,7 +8,7 @@ A cloud-native SaaS tool that analyzes GitHub repositories and uses AI to genera
 
 ## 🚀 What This Project Does
 
-The Portfolio Analyzer allows users to paste a public GitHub URL, which the app then analyzes by fetching repository metadata via the GitHub API, scanning the repo structure for DevOps signals, sending findings to an AI model, and returning:
+The DevOps Portfolio Analyzer allows users to paste a public GitHub URL, which the app then analyzes by fetching repository metadata via the GitHub API, scanning the repo structure for DevOps signals, sending findings to an AI model, and returning:
 - A plain English project summary
 - README improvement suggestions
 - CV-ready bullet points
@@ -29,7 +29,6 @@ Built to demonstrate real-world cloud engineering patterns — not a tutorial ap
 | AI | OpenAI API |
 | Infrastructure | AWS (ECS Fargate, RDS, S3, SQS, ECR) |
 | Containers | Docker / Docker Compose |
-| CI/CD | GitHub Actions |
 
 ---
 
@@ -51,8 +50,8 @@ Built to demonstrate real-world cloud engineering patterns — not a tutorial ap
 ### Setup
 
 ```bash
-git clone https://github.com/joebery/devops_portfolio_analyzer.git
-cd devops_portfolio_analyzer
+git clone https://github.com/joebery/DevOps_Portfolio_Analyzer.git
+cd DevOps_Portfolio_Analyzer
 ```
 
 Create a `.env` file in the root:
@@ -72,7 +71,7 @@ docker compose up --build
 
 ## 🔄 What Changed In This Update
 
-Recent updates include enhanced integration with OpenAI, which now generates project summaries. The README has been improved for clarity and completeness, ensuring that new features are well-documented.
+Recent updates include a revision of the README for clarity and completeness, including updates to the project name and auto-generated documentation.
 
 ---
 
