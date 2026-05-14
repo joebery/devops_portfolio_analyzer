@@ -1,5 +1,6 @@
 import httpx
 import os
+import base64
 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
@@ -54,3 +55,34 @@ async def scan_repo_structure(owner: str, repo: str, branch: str = "main") -> di
             ),
             "workflow_count": sum(1 for p in paths if p.startswith(".github/workflows") and p.endswith(".yml"))
         }
+
+async def get_existing_readme(owner: str, repo: str) -> str:
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{BASE_URL}/repos/{owner}/{repo}/contents/README.md",
+            headers=HEADERS
+        )
+        if response.status_code == 404:
+            return "No existing README found."
+        response.raise_for_status()
+        data = response.json()
+        content = base64.b64decode(data["content"]).decode("utf-8")
+        return content
+
+async def get_recent_commits(owner: str, repo: str, count: int = 5) -> list:
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{BASE_URL}/repos/{owner}/{repo}/commits?per_page={count}",
+            headers=HEADERS
+        )
+        response.raise_for_status()
+        commits = response.json()
+
+        return [
+            {
+                "message": c["commit"]["message"],
+                "date": c["commit"]["author"]["date"],
+                "author": c["commit"]["author"]["name"]
+            }
+            for c in commits
+        ]

@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from app.db import get_db
 from app.models import Repository
 from app.schemas import RepoSubmit, RepoResponse
-from app.services.github_service import get_repo_metadata, scan_repo_structure
+from app.services.github_service import get_repo_metadata, scan_repo_structure, get_existing_readme, get_recent_commits
+from app.services.ai_service import analyse_repo
 
 router = APIRouter(prefix="/api/v1/repos", tags=["repos"])
 
@@ -35,13 +36,12 @@ async def test_github(owner: str, repo: str):
     structure = await scan_repo_structure(owner, repo, metadata["default_branch"])
     return {**metadata, **structure}
 
-
-from app.services.ai_service import analyse_repo
-
 @router.get("/test-ai/{owner}/{repo}")
 async def test_ai(owner: str, repo: str):
     metadata = await get_repo_metadata(owner, repo)
     structure = await scan_repo_structure(owner, repo, metadata["default_branch"])
+    existing_readme = await get_existing_readme(owner, repo)
+    recent_commits = await get_recent_commits(owner, repo)
     combined = {**metadata, **structure, "owner": owner, "repo": repo}
-    result = await analyse_repo(combined)
+    result = await analyse_repo(combined, existing_readme, recent_commits)
     return result
