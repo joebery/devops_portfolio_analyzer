@@ -74,7 +74,7 @@ docker compose up --build
 
 ## 🔄 What Changed In This Update
 
-Recent updates include the integration of OpenAI, which now generates project summaries and DevOps maturity scores from the analyzed repository metadata. Additionally, the README has been revised for clarity and completeness, and the `.gitignore` file was updated to ensure sensitive files are not committed.
+Recent updates include enhanced integration with OpenAI, which now generates project summaries and DevOps maturity scores from the analyzed repository metadata. The README has been improved for clarity and completeness, ensuring that new features are well-documented.
 
 ---
 
