@@ -19,6 +19,7 @@ services:
     environment:
       DATABASE_URL: postgresql://dev:devpassword@db:5432/portfolio_analyzer
       GITHUB_TOKEN: ${GITHUB_TOKEN}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     depends_on:
       - db
 

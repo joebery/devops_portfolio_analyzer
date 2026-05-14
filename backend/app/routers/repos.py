@@ -34,3 +34,14 @@ async def test_github(owner: str, repo: str):
     metadata = await get_repo_metadata(owner, repo)
     structure = await scan_repo_structure(owner, repo, metadata["default_branch"])
     return {**metadata, **structure}
+
+
+from app.services.ai_service import analyse_repo
+
+@router.get("/test-ai/{owner}/{repo}")
+async def test_ai(owner: str, repo: str):
+    metadata = await get_repo_metadata(owner, repo)
+    structure = await scan_repo_structure(owner, repo, metadata["default_branch"])
+    combined = {**metadata, **structure, "owner": owner, "repo": repo}
+    result = await analyse_repo(combined)
+    return result
