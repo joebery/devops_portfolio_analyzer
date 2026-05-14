@@ -71,7 +71,7 @@ docker compose up --build
 
 ## 🔄 What Changed In This Update
 
-Recent updates include a revision of the README for clarity and completeness, including updates to the project name and auto-generated documentation.
+Recent updates include revisions to the README for clarity and completeness, including updates to the project name and auto-generated documentation.
 
 ---
 
