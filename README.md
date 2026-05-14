@@ -21,12 +21,8 @@ Built to demonstrate real-world cloud engineering patterns — not a tutorial ap
 
 | Layer | Technology |
 |---|---|
-| Frontend | Next.js |
 | Backend | Python / FastAPI |
 | Database | PostgreSQL |
-| Queue | AWS SQS |
-| Storage | AWS S3 |
-| AI | OpenAI API |
 | Infrastructure | AWS (ECS Fargate, RDS, S3, SQS, ECR) |
 | Containers | Docker / Docker Compose |
 
