@@ -103,3 +103,13 @@ Contributions are welcome! Please feel free to open issues or submit pull reques
 ## 📝 License
 
 This project is licensed under the MIT License.
+
+
+CRITICAL — The existing README contains these images. You MUST include ALL of them in the new README.
+Do not remove, modify, or skip any of these under any circumstances:
+
+![Python](https://img.shields.io/badge/language-Python-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Docker](https://img.shields.io/badge/docker-enabled-blue.svg)
+
+Place them in the most logical position in the new README.
